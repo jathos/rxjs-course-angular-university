@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { fromEvent, interval, timer } from 'rxjs';
+import { fromEvent, interval, Observable, timer } from 'rxjs';
 
 @Component({
   selector: 'about',
@@ -38,20 +38,38 @@ export class AboutComponent implements OnInit {
 
     //THIS CODE DECLARES A STREAM TEMPLATE (OBSERVABLE) THAT WILL START AFTER 3000 MS AND THEN REPEAT EVERY 1000 MS
     //THE $ SIGN IS USED TO DECLARE AN OBSERVABLE
-    const interval$ = timer(3000, 1000);
+    // const interval$ = timer(3000, 1000);
 
-    //SUBSCRIBING TO AN OBSERVABLE CREATES AN INSTANCE OF THAT DATA STREAM
-    interval$.subscribe(val => console.log('stream 1 ' + val));
+    // SUBSCRIBING TO AN OBSERVABLE CREATES AN INSTANCE OF THAT DATA STREAM
+    // interval$.subscribe(val => console.log('stream 1 ' + val));
 
-    const sub = interval$.subscribe(val => console.log('stream 2 ' + val));
+    // const sub = interval$.subscribe(val => console.log('stream 2 ' + val));
 
-    //UNSUBSCRIBE IS A METHOD ON SUBSCRIPTIONS THAT WILL UNSUBSCRIBE FROM THE DATA STREAM
-    setTimeout(() => sub.unsubscribe(), 5000);
+    // UNSUBSCRIBE IS A METHOD ON SUBSCRIPTIONS THAT WILL UNSUBSCRIBE FROM THE DATA STREAM
+    // setTimeout(() => sub.unsubscribe(), 5000);
 
-    const click$ = fromEvent(document, 'click');
+    // const click$ = fromEvent(document, 'click');
 
-    //SUBSCRIBE PARAMETERS ARE CALLBACK, ERROR CALLBACK, AND CALLBACK IF STREAM COMPLETES
-    click$.subscribe(evt => console.log(evt), err => console.log(), () => console.log("completed"));
+    // SUBSCRIBE PARAMETERS ARE CALLBACK, ERROR CALLBACK, AND CALLBACK IF STREAM COMPLETES.  AN OBSERVABLE STREAM SHOULD END AFTER EITHER AN ERROR OR COMPLETING
+    // click$.subscribe(evt => console.log(evt), err => console.log(), () => console.log("completed"));
+
+
+    //BELOW CODE CREATES A NEW OBSERVABLE BY WRITING ONE FROM SCRATCH.  
+    const http$ = new Observable(observer => {
+      fetch('/api/courses')
+        .then(response => {
+          return response.json();
+        })
+        .then(body => {
+          observer.next(body);
+          observer.complete();
+        })
+        .catch(err => {
+          observer.error(err);
+        })
+    });
+
+    http$.subscribe(courses => console.log(courses), () => { }, () => console.log('completed'));
   }
 
 }
