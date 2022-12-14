@@ -94,14 +94,14 @@ export class AboutComponent implements OnInit {
 
     //PIPE METHOD ALLOWS YOU TO CHAIN MULTIPLE OPERATORS
 
-    const http$ = createHttpObservable();
+    // const http$ = createHttpObservable();
 
-    //to understand below code, please see the sample api format used in example.json.
-    //bracket notation is being used to access the main property on a json object, with a key name of 'payload'
-    //payload is an array of nine objects
-    const courses$ = http$.pipe(map(res => res['payload']));
+    // //to understand below code, please see the sample api format used in example.json.
+    // //bracket notation is being used to access the main property on a json object, with a key name of 'payload'
+    // //payload is an array of nine objects
+    // const courses$ = http$.pipe(map(res => res['payload']));
 
-    courses$.subscribe((courses) => console.log(courses), () => { }, () => console.log('completed'));
+    // courses$.subscribe((courses) => console.log(courses), () => { }, () => console.log('completed'));
 
   }
 }
