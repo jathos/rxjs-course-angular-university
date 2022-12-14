@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { fromEvent, interval, Observable, timer } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { createHttpObservable } from '../common/util';
 
 @Component({
   selector: 'about',
@@ -55,21 +57,51 @@ export class AboutComponent implements OnInit {
 
 
     //BELOW CODE CREATES A NEW OBSERVABLE BY WRITING ONE FROM SCRATCH.  
-    const http$ = new Observable(observer => {
-      fetch('/api/courses')
-        .then(response => {
-          return response.json();
-        })
-        .then(body => {
-          observer.next(body);
-          observer.complete();
-        })
-        .catch(err => {
-          observer.error(err);
-        })
-    });
+    //   const http$ = new Observable(observer => {
+    //     fetch('/api/courses')
+    //       .then(response => {
+    //         return response.json();
+    //       })
+    //       .then(body => {
+    //         observer.next(body);
+    //         observer.complete();
+    //       })
+    //       .catch(err => {
+    //         observer.error(err);
+    //       })
+    //   });
 
-    http$.subscribe(courses => console.log(courses), () => { }, () => console.log('completed'));
+    //   http$.subscribe(courses => console.log(courses), () => { }, () => console.log('completed'));
+
+    //BELOW FUNCTION HAS BEEN PLACED INTO 'src/app/comm/util.ts' AS AN EXPORTABLE UTILITY
+    // function createHttpObservable(url: string) {
+    //   return new Observable(observer => {
+    //     fetch('/api/courses')
+    //       .then(response => {
+    //         return response.json();
+    //       })
+    //       .then(body => {
+    //         observer.next(body);
+    //         observer.complete();
+    //       })
+    //       .catch(err => {
+    //         observer.error(err);
+    //       });
+    //   });
+    // };
+
+    //OPERATORS RETURN ANOTHER OBSERVABLE THAT EMITS THE RESULTS OF THE OPERATOR FUNCTION
+
+    //PIPE METHOD ALLOWS YOU TO CHAIN MULTIPLE OPERATORS
+
+    const http$ = createHttpObservable();
+
+    //to understand below code, please see the sample api format used in example.json.
+    //bracket notation is being used to access the main property on a json object, with a key name of 'payload'
+    //payload is an array of nine objects
+    const courses$ = http$.pipe(map(res => res['payload']));
+
+    courses$.subscribe((courses) => console.log(courses), () => { }, () => console.log('completed'));
+
   }
-
 }
