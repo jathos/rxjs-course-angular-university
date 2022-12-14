@@ -43,11 +43,15 @@ export class AboutComponent implements OnInit {
     //SUBSCRIBING TO AN OBSERVABLE CREATES AN INSTANCE OF THAT DATA STREAM
     interval$.subscribe(val => console.log('stream 1 ' + val));
 
-    interval$.subscribe(val => console.log('stream 2 ' + val));
+    const sub = interval$.subscribe(val => console.log('stream 2 ' + val));
+
+    //UNSUBSCRIBE IS A METHOD ON SUBSCRIPTIONS THAT WILL UNSUBSCRIBE FROM THE DATA STREAM
+    setTimeout(() => sub.unsubscribe(), 5000);
 
     const click$ = fromEvent(document, 'click');
 
-    click$.subscribe(evt => console.log(evt));
+    //SUBSCRIBE PARAMETERS ARE CALLBACK, ERROR CALLBACK, AND CALLBACK IF STREAM COMPLETES
+    click$.subscribe(evt => console.log(evt), err => console.log(), () => console.log("completed"));
   }
 
 }
