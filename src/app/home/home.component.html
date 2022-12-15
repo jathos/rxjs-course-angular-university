@@ -6,7 +6,9 @@
 
         <mat-tab label="Beginners">
 
-            <courses-card-list [courses]="beginnerCourses">
+            <!-- | async will automatically subscribe to an observable from the template level -->
+            <!-- you do not need a subscribe method on the component if you use | async here -->
+            <courses-card-list [courses]="beginnerCourses$ | async">
 
             </courses-card-list>
 
@@ -14,7 +16,7 @@
 
         <mat-tab label="Advanced">
 
-            <courses-card-list [courses]="advancedCourses"></courses-card-list>
+            <courses-card-list [courses]="advancedCourses$ | async"></courses-card-list>
 
         </mat-tab>
 
