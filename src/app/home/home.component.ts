@@ -46,7 +46,12 @@ export class HomeComponent implements OnInit {
 
         const http$ = createHttpObservable();
 
-        const courses$ = http$.pipe(map(res => res['payload']));
+        //THE TAP OPERATOR IS USED TO PERFORM SIDE EFFECTS / UPDATE ELEMENTS OUTSIDE THE OBSERVABLE CHAIN
+        const courses$ = http$.pipe(
+            tap(() => console.log('HTTP Request Executed')),
+            map(res => res['payload']),
+            shareReplay()
+        );
 
         this.beginnerCourses$ = courses$.pipe(map(courses => courses.filter(course => course.category == 'BEGINNER')));
 
