@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { of, concat, fromEvent, interval, Observable, timer } from 'rxjs';
+import { of, concat, fromEvent, interval, Observable, timer, merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 // import { resourceLimits } from 'worker_threads';
 import { createHttpObservable } from '../common/util';
@@ -105,14 +105,24 @@ export class AboutComponent implements OnInit {
     // courses$.subscribe((courses) => console.log(courses), () => { }, () => console.log('completed'));
 
     //THE CONCAT OPERATOR WILL COMBINE OBSERVABLES.  IT WAITS TIL ONE OBSERVABLE COMPLETES THEN ADDS THE NEXT ETC
-    const source1$ = of(1, 2, 3);
+    // const source1$ = of(1, 2, 3);
 
-    const source2$ = of(4, 5, 6);
+    // const source2$ = of(4, 5, 6);
 
-    const source3$ = of(7, 8, 9);
+    // const source3$ = of(7, 8, 9);
 
-    const result$ = concat(source1$, source2$, source3$);
+    // const result$ = concat(source1$, source2$, source3$);
 
-    result$.subscribe(val => console.log(val));
+    // result$.subscribe(val => console.log(val));
+
+    //MERGE: https://rxjs-dev.firebaseapp.com/api/index/function/merge#examples
+    //VALUES FROM 2+ DIFFERENT OBSERVABLES ARE CONCATENATED IN PARALLEL AS EACH VALUE OCCURS
+    //OBSERVABLES DO NOT NEED TO COMPLETE BEFORE CONCATENATION OF VALUES OCCURS
+    const interval1$ = interval(1000);
+    const interval2$ = interval1$.pipe(map(val => 10 * val));
+
+    const result$ = merge(interval1$, interval2$);
+
+    result$.subscribe(console.log);
   }
 }

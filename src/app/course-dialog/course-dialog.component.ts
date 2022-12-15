@@ -39,11 +39,14 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
 
+        //CONCAT MAP: https://rxjs-dev.firebaseapp.com/api/operators/concatMap#description
+        //values resulting from a map function are concatenated in order of (value1 * mapFunction, value2 * mapFunction, etc)
         this.form.valueChanges
             .pipe(
                 filter(() => this.form.valid),
                 concatMap(changes => this.saveCourse(changes))
             ).subscribe();
+
     }
 
     saveCourse(changes) {
