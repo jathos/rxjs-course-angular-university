@@ -118,11 +118,11 @@ export class AboutComponent implements OnInit {
     //MERGE: https://rxjs-dev.firebaseapp.com/api/index/function/merge#examples
     //VALUES FROM 2+ DIFFERENT OBSERVABLES ARE CONCATENATED IN PARALLEL AS EACH VALUE OCCURS
     //OBSERVABLES DO NOT NEED TO COMPLETE BEFORE CONCATENATION OF VALUES OCCURS
-    const interval1$ = interval(1000);
-    const interval2$ = interval1$.pipe(map(val => 10 * val));
+    // const interval1$ = interval(1000);
+    // const interval2$ = interval1$.pipe(map(val => 10 * val));
 
-    const result$ = merge(interval1$, interval2$);
+    // const result$ = merge(interval1$, interval2$);
 
-    result$.subscribe(console.log);
+    // result$.subscribe(console.log);
   }
 }
