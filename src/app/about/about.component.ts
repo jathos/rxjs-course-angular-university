@@ -124,5 +124,13 @@ export class AboutComponent implements OnInit {
     // const result$ = merge(interval1$, interval2$);
 
     // result$.subscribe(console.log);
+
+
+    //BELOW CODE DEMONSTRATES AN UNSUBSCRIPTION
+    // const interval1$ = interval(1000);
+
+    // const sub = interval1$.subscribe(console.log);
+
+    // setTimeout(() => sub.unsubscribe(), 5000);
   }
 }

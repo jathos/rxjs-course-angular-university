@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
 
-        const http$ = createHttpObservable();
+        const http$ = createHttpObservable('/api/courses');
 
         //THE TAP OPERATOR IS USED TO PERFORM SIDE EFFECTS / UPDATE ELEMENTS OUTSIDE THE OBSERVABLE CHAIN
         const courses$ = http$.pipe(
