@@ -25,6 +25,7 @@ import { createHttpObservable } from '../common/util';
 })
 export class CourseComponent implements OnInit, AfterViewInit {
 
+    courseId: string;
     course$: Observable<any>;
     lessons$: Observable<any>;
 
@@ -38,19 +39,15 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
 
-        const courseId = this.route.snapshot.params['id'];
+        this.courseId = this.route.snapshot.params['id'];
 
-        this.course$ = createHttpObservable(`/api/courses/${courseId}`);
+        this.course$ = createHttpObservable(`/api/courses/${this.courseId}`);
 
-        this.lessons$ = createHttpObservable(`/api/lessons?courseId=${courseId}&pageSize=100`)
-            .pipe(
-                map(res => res['payload'])
-            );
     }
 
     ngAfterViewInit() {
 
-        fromEvent(this.input.nativeElement, 'keyup')
+        const searchLessons$ = fromEvent(this.input.nativeElement, 'keyup')
             .pipe(
                 map((event: any) => event.target.value),
                 //https://rxjs-dev.firebaseapp.com/api/index/function/debounceTime
@@ -60,14 +57,22 @@ export class CourseComponent implements OnInit, AfterViewInit {
                 //EMITTING A VALUE
                 debounceTime(400),
                 //DISTINCTUNTILCHANGED IS KIND OF LIKE IT SOUNDS
-                distinctUntilChanged()
-            )
-            .subscribe(console.log);
+                distinctUntilChanged(),
+                switchMap(search => this.loadLessons(search))
+            );
 
+        const initialLessons$ = this.loadLessons();
+
+        this.lessons$ = concat(initialLessons$, searchLessons$);
 
     }
 
 
-
+    loadLessons(search = ''): Observable<Lesson[]> {
+        return createHttpObservable(`/api/lessons?courseId=${this.courseId}&pageSize=100&filter=${search}`)
+            .pipe(
+                map(res => res['payload'])
+            );
+    }
 
 }
