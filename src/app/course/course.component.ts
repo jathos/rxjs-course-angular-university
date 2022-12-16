@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { Course } from "../model/course";
 import {
@@ -50,7 +50,19 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
 
-
+        fromEvent(this.input.nativeElement, 'keyup')
+            .pipe(
+                map((event: any) => event.target.value),
+                //https://rxjs-dev.firebaseapp.com/api/index/function/debounceTime
+                //DEBOUNCE TIME WILL ONLY SEND A VALUE TO THE STREAM IF
+                //THERE HAS BEEN SILENCE FOR A GIVEN PERIOD OF TIME
+                //IN THE CASE BELOW IT NEEDS 400MS OF SILENCE BEFORE 
+                //EMITTING A VALUE
+                debounceTime(400),
+                //DISTINCTUNTILCHANGED IS KIND OF LIKE IT SOUNDS
+                distinctUntilChanged()
+            )
+            .subscribe(console.log);
 
 
     }
